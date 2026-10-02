@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>When can a matrix be undone? · Matrix Arcade</title>
+<style>
+:root{font-family:system-ui,sans-serif;color:#202a35;background:#f6f5f1;font-synthesis:none}*{box-sizing:border-box}body{margin:0}main{max-width:1180px;margin:auto;padding:32px 24px}a{color:#5542b6}.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#637267;font-weight:700}h1{font-family:Georgia,serif;font-weight:400;font-size:clamp(32px,5vw,54px);margin:12px 0}p{line-height:1.65}.intro{max-width:760px;color:#56616a}.layout{display:grid;grid-template-columns:1fr 320px;gap:22px;margin-top:28px}.panel{background:white;border:1px solid #dedfd9;border-radius:16px;padding:22px}h2{font-size:18px;margin:0 0 12px}.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:#5d6570}.purple{color:#7754cb}.pink{color:#c43c85}svg{display:block;width:100%;background:#fcfcfa;border-radius:10px;touch-action:none;margin:16px 0}button,input{font:inherit}button{border:1px solid #d5d8d2;border-radius:8px;padding:9px 12px;background:#fff;cursor:pointer}button:hover{background:#eeedf7}button:focus-visible,input:focus-visible{outline:3px solid #8673d6;outline-offset:3px}.presets{display:flex;gap:8px;flex-wrap:wrap}.matrix{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;border-left:2px solid;border-right:2px solid;padding:10px;margin:16px 0}.matrix label{font-size:12px}.matrix input{display:block;width:100%;padding:9px;border:1px solid #ccc;border-radius:6px;margin-top:4px}small,.hint{font-size:13px;color:#626d77;line-height:1.6}.stat{border-top:1px solid #e8e9e5;padding:15px 0;display:flex;justify-content:space-between;gap:8px}.stat strong{font-size:23px}.status{background:#eaf3ee;border-radius:10px;padding:16px;margin-top:12px}.status.singular{background:#fff0de}.status h2{margin-bottom:4px}.status p{margin:0;font-size:14px}.mapping{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:24px}.equations{font-family:ui-monospace,monospace;font-size:14px;line-height:2;background:#f5f5f1;padding:16px;border-radius:10px;overflow-wrap:anywhere}footer{margin:28px 0;font-size:13px;color:#69716f}.handle{cursor:grab}.handle:active{cursor:grabbing}@media(max-width:800px){.layout,.mapping{grid-template-columns:1fr}main{padding:20px 14px}.panel{padding:16px}}
+</style>
+</head>
+<body><main>
+<div class="eyebrow">Matrix Arcade / Determinants / Version 1</div>
+<h1>When can a matrix be undone?</h1>
+<p class="intro">A matrix moves the basis vectors—and every point follows. Watch what happens to a unit square: <b>its new area is |det(A)|.</b> When that area becomes zero, different inputs merge and the transformation loses information.</p>
+<div class="layout">
+<section class="panel"><h2>Transform the unit square</h2><div class="legend"><span class="purple">● First column: A e₁</span><span class="pink">● Second column: A e₂</span><span>┄ Original square (area 1)</span></div>
+<svg id="plot" viewBox="0 0 640 500" role="img" aria-label="Coordinate grid showing the original unit square and transformed parallelogram"><defs><marker id="arrow1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#7754cb"/></marker><marker id="arrow2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#c43c85"/></marker></defs><g id="drawing"></g></svg>
+<p class="hint">Drag either colored endpoint (snaps to 0.1), or edit the matrix. Both plots use the same fixed scale: 1 grid step = 1 unit.</p>
+<div class="presets"><button data-m="1,0,0,1">Reset: identity</button><button data-m="2,1,0,1">Stretch + shear</button><button data-m="-1,0,0,1">Reflect</button><button data-m="2,1,0,0">Collapse to line</button><button data-m="0,0,0,0">Collapse to point</button></div></section>
+<aside class="panel"><h2>Change the matrix</h2><small>A = [a b; c d]. Each column is a transformed basis vector. Entries range from −2 to 2.</small>
+<div class="matrix"><label class="purple">a<input id="a" aria-label="a, first column x" type="number" min="-2" max="2" step="0.1" value="1"></label><label class="pink">b<input id="b" aria-label="b, second column x" type="number" min="-2" max="2" step="0.1" value="0"></label><label class="purple">c<input id="c" aria-label="c, first column y" type="number" min="-2" max="2" step="0.1" value="0"></label><label class="pink">d<input id="d" aria-label="d, second column y" type="number" min="-2" max="2" step="0.1" value="1"></label></div>
+<div aria-live="polite"><div class="stat"><span>det(A) = ad − bc</span><strong id="det"></strong></div><small id="calculation"></small><div class="stat"><span>Area = |det(A)|</span><strong id="area"></strong></div><div class="stat"><span>Orientation</span><b id="orientation"></b></div><div id="status" class="status"><h2 id="status-title"></h2><p id="explanation"></p></div></div>
+</aside></div>
+<section class="panel mapping"><div><h2 id="mapping-title">Different inputs, different outputs</h2><p id="mapping-copy"></p><div class="equations" id="equations"></div><p class="hint">The pair is chosen automatically for the current matrix. In a singular case, their difference lies in the matrix’s null space.</p></div><div><h2>Before: two distinct inputs</h2><svg id="inputs" viewBox="0 0 640 500" role="img" aria-label="Two distinct input points P and Q before transformation"></svg><small>● P is teal. Q is an orange ring. Their images appear on the main plot.</small></div></section>
+<p><b>Try this:</b> Choose “Collapse to line,” then change d from 0 to 0.1. What happens to the area and the two outputs? Next, reflect the square: a negative determinant reverses orientation, but the transformation is still invertible.</p>
+<footer>A 2D extension of <a href="../index.html">The Matrix Arcade</a> by Yizhe Ang. <a href="https://github.com/yizhe-ang/matrix-explorable">Original source (MIT)</a>. First working implementation for P1 proposal iteration.</footer>
+</main>
+<script>
+const ids=['a','b','c','d'], fields=ids.map(id=>document.getElementById(id));
+let values=[1,0,0,1], drag=null;
+const $=id=>document.getElementById(id), S=50, X=320,Y=250;
+const fmt=n=>Number(n.toFixed(4)).toString(), xy=p=>[X+S*p[0],Y-S*p[1]], point=p=>xy(p).join(',');
+const line=(p,q,attrs='')=>`<line x1="${xy(p)[0]}" y1="${xy(p)[1]}" x2="${xy(q)[0]}" y2="${xy(q)[1]}" ${attrs}/>`;
+function grid(){let s='';for(let i=-6;i<=6;i++){s+=line([i,-5],[i,5],`stroke="${i?'#e8eae5':'#a8b0b4'}"`);if(i&&Math.abs(i)<6)s+=`<text x="${X+S*i}" y="${Y+17}" text-anchor="middle" fill="#7b8385" font-size="11">${i}</text>`;}for(let i=-5;i<=5;i++){s+=line([-6.4,i],[6.4,i],`stroke="${i?'#e8eae5':'#a8b0b4'}"`);if(i&&Math.abs(i)<5)s+=`<text x="${X+7}" y="${Y-S*i-5}" fill="#7b8385" font-size="11">${i}</text>`;}return s;}
+function dot(p,color,label,ring=false){const [x,y]=xy(p);return `<circle cx="${x}" cy="${y}" r="${ring?10:5}" fill="${ring?'none':color}" stroke="${color}" stroke-width="3"/><text x="${x+14}" y="${y+(ring?24:-12)}" fill="${color}" font-size="14" font-weight="600">${label}</text>`;}
+function render(){
+ const [a,b,c,d]=values;
+ // Inputs are restricted to tenths; integer arithmetic makes the zero test exact.
+ const [ai,bi,ci,di]=values.map(v=>Math.round(v*10));const detInt=ai*di-bi*ci, det=detInt/100, singular=detInt===0;
+ const map=([x,y])=>[a*x+b*y,c*x+d*y];
+ let delta=[-b,a];if(a===0&&b===0)delta=[-d,c];if(delta[0]===0&&delta[1]===0)delta=[1,0];
+ const norm=Math.max(Math.abs(delta[0]),Math.abs(delta[1]));delta=delta.map(v=>v/norm);
+ const p=[0.5,0.5],q=p.map((v,i)=>v+delta[i]),ap=map(p),aq=map(q);
+ $('det').textContent=fmt(det);$('area').textContent=fmt(Math.abs(det));$('calculation').textContent=`(${fmt(a)} × ${fmt(d)}) − (${fmt(b)} × ${fmt(c)}) = ${fmt(det)}`;
+ $('orientation').textContent=singular?'Collapsed':det<0?'Reversed':'Preserved';
+ $('status').classList.toggle('singular',singular);$('status-title').textContent=singular?'Not invertible':'Invertible';
+ $('explanation').textContent=singular?'The columns are dependent. The square has zero area, and distinct inputs can produce the same output.':'The columns are independent. Nonzero area means every output has exactly one input; the transformation can be undone.';
+ const corners=[[0,0],[a,c],[a+b,c+d],[b,d]];
+ let s=grid()+`<polygon points="${corners.map(point).join(' ')}" fill="#7754cb" fill-opacity="0.2" stroke="#7754cb" stroke-width="2"/>`;
+ s+=`<polygon points="${[[0,0],[1,0],[1,1],[0,1]].map(point).join(' ')}" fill="none" stroke="#68797b" stroke-width="2" stroke-dasharray="5 5"/>`;
+ [[a,c],[b,d]].forEach((v,i)=>{s+=line([0,0],v,`stroke="${i?'#c43c85':'#7754cb'}" stroke-width="3" marker-end="url(#arrow${i+1})"`);s+=`<circle class="handle" data-col="${i}" cx="${xy(v)[0]}" cy="${xy(v)[1]}" r="9" fill="white" stroke="${i?'#c43c85':'#7754cb'}" stroke-width="3"/>`;});
+ s+=dot(ap,'#087e82',singular?'AP = AQ':'AP')+dot(aq,'#c66b14',singular?'':'AQ',true);$('drawing').innerHTML=s;
+ $('inputs').innerHTML=grid()+dot(p,'#087e82','P')+dot(q,'#c66b14','Q',true);
+ $('mapping-title').textContent=singular?'Two inputs. One output.':'Different inputs, different outputs';
+ $('mapping-copy').textContent=singular?(values.every(v=>v===0)?'The entire plane collapses to the origin. Every input has the same output, so there is no unique way back.':'The plane collapses to a line. P and Q are distinct, but their images coincide. From that output, you cannot recover which input you started with.'):'P and Q stay distinct after transformation. This pair illustrates the behavior; det(A) ≠ 0 guarantees it for every pair of distinct inputs.';
+ const pair=v=>`(${v.map(fmt).join(', ')})`;
+ $('equations').textContent=`P = ${pair(p)} → AP = ${pair(ap)}\nQ = ${pair(q)} → AQ = ${pair(aq)}`;$('equations').style.whiteSpace='pre-wrap';
+}
+function update(next){values=next.map(v=>Math.round(Math.max(-2,Math.min(2,v))*10)/10);fields.forEach((f,i)=>f.value=values[i]);render();}
+fields.forEach((f,i)=>f.addEventListener('input',()=>{if(f.value===''||!Number.isFinite(f.valueAsNumber))return;const next=[...values];next[i]=f.valueAsNumber;update(next);}));
+fields.forEach((f,i)=>f.addEventListener('blur',()=>f.value=values[i]));
+document.querySelectorAll('[data-m]').forEach(b=>b.addEventListener('click',()=>update(b.dataset.m.split(',').map(Number))));
+$('plot').addEventListener('pointerdown',e=>{const handle=e.target.closest('[data-col]');if(!handle)return;drag=Number(handle.dataset.col);$('plot').setPointerCapture(e.pointerId);});
+$('plot').addEventListener('pointermove',e=>{if(drag===null)return;const p=new DOMPoint(e.clientX,e.clientY).matrixTransform($('plot').getScreenCTM().inverse());const next=[...values];next[drag]=(p.x-X)/S;next[drag+2]=(Y-p.y)/S;update(next);});
+['pointerup','pointercancel','lostpointercapture'].forEach(name=>$('plot').addEventListener(name,()=>drag=null));render();
+</script></body></html>
