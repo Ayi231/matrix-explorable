@@ -1,18 +1,13 @@
-# The Matrix Arcade
-A Visual Explorable of Matrices and Linear Transformations.
+# The Matrix Arcade: Determinants and Invertibility
 
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U7U4NH69A)
+An interactive explainer showing how a matrix’s determinant connects to area, orientation, and invertibility. Scroll-driven visuals and a hands-on playground let readers explore how transformations stretch, reflect, or collapse space.
 
-**Check out the article live [here](https://yizhe-ang.github.io/matrix-explorable/)!**
+[View the live explainer](https://ayi231.github.io/matrix-explorable/determinant/)
 
+## Based on The Matrix Arcade
 
+This project extends **Yizhe Ang’s The Matrix Arcade**, retaining its introduction to vectors and matrix transformations and adding an exploration of determinants and invertibility.
 
-https://github.com/yizhe-ang/matrix-explorable/assets/17507891/2f0beee1-ddcf-4252-8247-c8a6b43b2168
+[Original explainer](https://yizhe-ang.github.io/matrix-explorable/) · [Original source code](https://github.com/yizhe-ang/matrix-explorable)
 
-
-
-Made with:
-- The Pudding's [Svelte Starter Template](https://github.com/the-pudding/svelte-starter)
-- [Threlte](https://threlte.xyz/)
-- [Mathbox](https://github.com/unconed/mathbox)
-- [GSAP](https://greensock.com/gsap/)
+Original content and code © Yizhe Ang, used under the MIT license. See LICENSE.
